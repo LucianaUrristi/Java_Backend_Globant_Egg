@@ -1,0 +1,395 @@
+import java.util.Date;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        PeliculasService peliculasService = new PeliculasService();
+        AlquilerService alquilerService = new AlquilerService();
+        Scanner scanner = new Scanner(System.in);
+
+        // Cargar películas de ejemplo
+        peliculasService.crearPelicula(new Pelicula("Pelicula 1", "Género 1", 2020, 120));
+        peliculasService.crearPelicula(new Pelicula("Pelicula 2", "Género 2", 2018, 90));
+        peliculasService.crearPelicula(new Pelicula("Pelicula 3", "Género 1", 2019, 110));
+        peliculasService.crearPelicula(new Pelicula("Pelicula 4", "Género 3", 2021, 105));
+        peliculasService.crearPelicula(new Pelicula("Pelicula 5", "Género 2", 2022, 100));
+
+        // Realizar alquileres de ejemplo
+        Pelicula pelicula1 = peliculasService.obtenerPeliculas().get(0);
+        Pelicula pelicula2 = peliculasService.obtenerPeliculas().get(1);
+        Pelicula pelicula3 = peliculasService.obtenerPeliculas().get(2);
+        Date fechaActual = new Date();
+
+        alquilerService.crearAlquiler(new Alquiler(pelicula1, fechaActual, new Date(fechaActual.getTime() + 3 * 24 * 60 * 60 * 1000), 10));
+        alquilerService.crearAlquiler(new Alquiler(pelicula2, fechaActual, new Date(fechaActual.getTime() + 2 * 24 * 60 * 60 * 1000), 10));
+        alquilerService.crearAlquiler(new Alquiler(pelicula3, fechaActual, new Date(fechaActual.getTime() + 5 * 24 * 60 * 60 * 1000), 10));
+
+        int opcion;
+        do {
+            System.out.println("----- Menú -----");
+            System.out.println("1. Cargar una película");
+            System.out.println("2. Listar todas las películas disponibles");
+            System.out.println("3. Crear un alquiler");
+            System.out.println("4. Realizar una lista de todos los alquileres");
+            System.out.println("5. Buscar películas por título");
+            System.out.println("6. Buscar películas por género");
+            System.out.println("7. Buscar alquileres por fecha");
+            System.out.println("8. Calcular el ingreso total del servicio");
+            System.out.println("9. Salir");
+            System.out.print("Ingrese una opción: ");
+            opcion = scanner.nextInt();
+            scanner.nextLine(); // Limpiar el buffer de entrada
+
+            switch (opcion) {
+                case 1:
+                    System.out.print("Ingrese el título de la película: ");
+                    String titulo = scanner.nextLine();
+                    System.out.print("Ingrese el género de la película: ");
+                    String genero = scanner.nextLine();
+                    System.out.print("Ingrese el año de la película: ");
+                    int anio = scanner.nextInt();
+                    System.out.print("Ingrese la duración de la película (en minutos): ");
+                    int duracion = scanner.nextInt();
+                    scanner.nextLine(); // Limpiar el buffer de entrada
+
+                    Pelicula nuevaPelicula = new Pelicula(titulo, genero, anio, duracion);
+                    peliculasService.crearPelicula(nuevaPelicula);
+                    System.out.println("La película se ha cargado correctamente.");
+                    break;
+
+                case 2:
+                    System.out.println("----- Listado de películas disponibles -----");
+                    List<Pelicula> peliculasDisponibles = peliculasService.obtenerPeliculas();
+                    if (peliculasDisponibles.isEmpty()) {
+                        System.out.println("No hay películas disponibles.");
+                    } else {
+                        for (Pelicula pelicula : peliculasDisponibles) {
+                            System.out.println("Título: " + pelicula.getTitulo());
+                            System.out.println("Género: " + pelicula.getGenero());
+                            System.out.println("Año: " + pelicula.getAnio());
+                            System.out.println("Duración: " + pelicula.getDuracion() + " minutos");
+                            System.out.println("--------------------");
+                        }
+                    }
+                    break;
+
+                case 3:
+                    System.out.println("----- Crear un alquiler -----");
+                    System.out.println("Seleccione una película:");
+
+                    List<Pelicula> peliculas = peliculasService.obtenerPeliculas();
+                    for (int i = 0; i < peliculas.size(); i++) {
+                        System.out.println((i + 1) + ". " + peliculas.get(i).getTitulo());
+                    }
+
+                    System.out.print("Ingrese el número correspondiente a la película: ");
+                    int numPelicula = scanner.nextInt();
+                    scanner.nextLine(); // Limpiar el buffer de entrada
+
+                    if (numPelicula >= 1 && numPelicula <= peliculas.size()) {
+                        Pelicula peliculaSeleccionada = peliculas.get(numPelicula - 1);
+                        System.out.print("Ingrese la fecha de inicio del alquiler (formato dd/MM/yyyy): ");
+                        String fechaInicioStr = scanner.nextLine();
+                        System.out.print("Ingrese la fecha de fin del alquiler (formato dd/MM/yyyy): ");
+                        String fechaFinStr = scanner.nextLine();
+                        System.out.print("Ingrese el precio del alquiler: ");
+                        double precio = scanner.nextDouble();
+                        scanner.nextLine(); // Limpiar el buffer de entrada
+
+                        // Convertir las fechas de texto a objetos Date
+                        Date fechaInicio = parsearFecha(fechaInicioStr);
+                        Date fechaFin = parsearFecha(fechaFinStr);
+
+                        if (fechaInicio != null && fechaFin != null) {
+                            Alquiler nuevoAlquiler = new Alquiler(peliculaSeleccionada, fechaInicio, fechaFin, precio);
+                            alquilerService.crearAlquiler(nuevoAlquiler);
+                            System.out.println("El alquiler se ha creado correctamente.");
+                        } else {
+                            System.out.println("Error al ingresar las fechas. Formato inválido.");
+                        }
+                    } else {
+                        System.out.println("La opción seleccionada no es válida.");
+                    }
+                    break;
+
+                case 4:
+                    System.out.println("----- Listado de alquileres realizados -----");
+                    List<Alquiler> alquileresRealizados = alquilerService.obtenerAlquileres();
+                    if (alquileresRealizados.isEmpty()) {
+                        System.out.println("No hay alquileres realizados.");
+                    } else {
+                        for (Alquiler alquiler : alquileresRealizados) {
+                            System.out.println("Pelicula: " + alquiler.getPelicula().getTitulo());
+                            System.out.println("Fecha de inicio: " + alquiler.getFechaInicio());
+                            System.out.println("Fecha de fin: " + alquiler.getFechaFin());
+                            System.out.println("Precio: $" + alquiler.getPrecio());
+                            System.out.println("--------------------");
+                        }
+                    }
+                    break;
+
+                case 5:
+                    System.out.print("Ingrese el título de la película a buscar: ");
+                    String tituloBusqueda = scanner.nextLine();
+                    Pelicula peliculaEncontrada = peliculasService.buscarPeliculaPorTitulo(tituloBusqueda);
+                    if (peliculaEncontrada != null) {
+                        System.out.println("La película existe en la lista.");
+                    } else {
+                        System.out.println("La película no existe en la lista.");
+                    }
+                    break;
+
+                case 6:
+                    System.out.print("Ingrese el género de la película a buscar: ");
+                    String generoBusqueda = scanner.nextLine();
+                    List<Pelicula> peliculasPorGenero = peliculasService.buscarPeliculasPorGenero(generoBusqueda);
+                    if (peliculasPorGenero.isEmpty()) {
+                        System.out.println("No hay películas del género especificado.");
+                    } else {
+                        System.out.println("----- Listado de películas del género " + generoBusqueda + " -----");
+                        for (Pelicula pelicula : peliculasPorGenero) {
+                            System.out.println("Título: " + pelicula.getTitulo());
+                            System.out.println("Género: " + pelicula.getGenero());
+                            System.out.println("Año: " + pelicula.getAnio());
+                            System.out.println("Duración: " + pelicula.getDuracion() + " minutos");
+                            System.out.println("--------------------");
+                        }
+                    }
+                    break;
+
+                case 7:
+                    System.out.print("Ingrese la fecha a buscar (formato dd/MM/yyyy): ");
+                    String fechaBusquedaStr = scanner.nextLine();
+                    Date fechaBusqueda = parsearFecha(fechaBusquedaStr);
+                    if (fechaBusqueda != null) {
+                        List<Alquiler> alquileresPorFecha = alquilerService.buscarAlquileresPorFecha(fechaBusqueda);
+                        if (alquileresPorFecha.isEmpty()) {
+                            System.out.println("No hay alquileres en la fecha especificada.");
+                        } else {
+                            System.out.println("----- Listado de alquileres en la fecha " + fechaBusqueda + " -----");
+                            for (Alquiler alquiler : alquileresPorFecha) {
+                                System.out.println("Pelicula: " + alquiler.getPelicula().getTitulo());
+                                System.out.println("Fecha de inicio: " + alquiler.getFechaInicio());
+                                System.out.println("Fecha de fin: " + alquiler.getFechaFin());
+                                System.out.println("Precio: $" + alquiler.getPrecio());
+                                System.out.println("--------------------");
+                            }
+                        }
+                    } else {
+                        System.out.println("Error al ingresar la fecha. Formato inválido.");
+                    }
+                    break;
+
+                case 8:
+                    double ingresoTotal = alquilerService.calcularIngresoTotal();
+                    System.out.println("El ingreso total del servicio es de: $" + ingresoTotal);
+                    break;
+
+                case 9:
+                    System.out.println("¡Hasta luego!");
+                    break;
+
+                default:
+                    System.out.println("Opción no válida. Por favor, seleccione una opción del menú.");
+                    break;
+            }
+
+            System.out.println();
+        } while (opcion != 9);
+
+        scanner.close();
+    }
+
+    private static Date parsearFecha(String fechaStr) {
+        try {
+            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+            return formato.parse(fechaStr);
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+}
+
+ALQUILER SERVICE
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+public class AlquilerService {
+    private List<Alquiler> alquileres;
+
+    public AlquilerService() {
+        alquileres = new ArrayList<>();
+    }
+
+    public void crearAlquiler(Alquiler alquiler) {
+        alquileres.add(alquiler);
+    }
+
+    public List<Alquiler> obtenerAlquileres() {
+        return alquileres;
+    }
+
+    public List<Alquiler> buscarAlquileresPorFecha(Date fecha) {
+        List<Alquiler> alquileresEncontrados = new ArrayList<>();
+        for (Alquiler alquiler : alquileres) {
+            if (alquiler.getFechaInicio().equals(fecha) || alquiler.getFechaFin().equals(fecha)) {
+                alquileresEncontrados.add(alquiler);
+            }
+        }
+        return alquileresEncontrados;
+    }
+
+    public double calcularIngresoTotal() {
+        double ingresoTotal = 0;
+        for (Alquiler alquiler : alquileres) {
+            Date fechaFin = alquiler.getFechaFin();
+            Date fechaInicio = alquiler.getFechaInicio();
+            long diferencia = fechaFin.getTime() - fechaInicio.getTime();
+            int diasAlquiler = (int) (diferencia / (1000 * 60 * 60 * 24)) + 1;
+
+            double precio = alquiler.getPrecio();
+            if (diasAlquiler > 3) {
+                double interes = (diasAlquiler - 3) * 0.1 * precio;
+                precio += interes;
+            }
+
+            ingresoTotal += precio;
+        }
+        return ingresoTotal;
+    }
+
+PELICULA SERVICE
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class PeliculasService {
+    private List<Pelicula> peliculas;
+
+    public PeliculasService() {
+        peliculas = new ArrayList<>();
+    }
+
+    public void crearPelicula(Pelicula pelicula) {
+        peliculas.add(pelicula);
+    }
+
+    public List<Pelicula> obtenerPeliculas() {
+        return peliculas;
+    }
+
+    public List<Pelicula> buscarPeliculasPorTitulo(String titulo) {
+        List<Pelicula> peliculasEncontradas = new ArrayList<>();
+        for (Pelicula pelicula : peliculas) {
+            if (pelicula.getTitulo().equalsIgnoreCase(titulo)) {
+                peliculasEncontradas.add(pelicula);
+            }
+        }
+        return peliculasEncontradas;
+    }
+
+    public List<Pelicula> buscarPeliculasPorGenero(String genero
+
+ALQUILER
+
+import java.util.Date;
+
+public class Alquiler {
+    private Pelicula pelicula;
+    private Date fechaInicio;
+    private Date fechaFin;
+    private double precio;
+
+    public Alquiler(Pelicula pelicula, Date fechaInicio, Date fechaFin, double precio) {
+        this.pelicula = pelicula;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+        this.precio = precio;
+    }
+
+    // Getters y setters
+
+    public Pelicula getPelicula() {
+        return pelicula;
+    }
+
+    public void setPelicula(Pelicula pelicula) {
+        this.pelicula = pelicula;
+    }
+
+    public Date getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public void setFechaInicio(Date fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public Date getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(Date fechaFin) {
+        this.fechaFin = fechaFin;
+    }
+
+    public double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
+    }
+}
+
+PELICULA
+
+public class Pelicula {
+    private String titulo;
+    private String genero;
+    private int anio;
+    private int duracion;
+
+    public Pelicula(String titulo, String genero, int anio, int duracion) {
+        this.titulo = titulo;
+        this.genero = genero;
+        this.anio = anio;
+        this.duracion = duracion;
+    }
+
+    // Getters y setters
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public String getGenero() {
+        return genero;
+    }
+
+    public void setGenero(String genero) {
+        this.genero = genero;
+    }
+
+    public int getAnio() {
+        return anio;
+    }
+
+    public void setAnio(int anio) {
+        this.anio = anio;
+    }
+
+    public int getDuracion() {
+        return duracion;
+    }
+
+    public void setDuracion(int duracion) {
+        this.duracion = duracion;
+    }
+}
