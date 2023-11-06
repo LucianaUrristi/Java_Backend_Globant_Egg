@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/D:/Programacion/Globant/NetBeansProjects/ejerciciosJDBCyJPA/JPA%20-%20ejercicio1/src/jpa/ejercicio1/JPAEjercicio1.java</file>
+            <file>file:/D:/Programacion/Globant/NetBeansProjects/ejerciciosJDBCyJPA/JPA%20-%20ejercicio1/src/persistence/AutorDAO.java</file>
+            <file>file:/D:/Programacion/Globant/NetBeansProjects/ejerciciosJDBCyJPA/JPA%20-%20ejercicio1/src/libreria/entidades/Libro.java</file>
+            <file>file:/D:/Programacion/Globant/NetBeansProjects/ejerciciosJDBCyJPA/JPA%20-%20ejercicio1/src/libreria/entidades/Editorial.java</file>
+            <file>file:/D:/Programacion/Globant/NetBeansProjects/ejerciciosJDBCyJPA/JPA%20-%20ejercicio1/src/libreria/servicios/LibroService.java</file>
+            <file>file:/D:/Programacion/Globant/NetBeansProjects/ejerciciosJDBCyJPA/JPA%20-%20ejercicio1/src/jpa/ejercicio1/Menu.java</file>
+            <file>file:/D:/Programacion/Globant/NetBeansProjects/ejerciciosJDBCyJPA/JPA%20-%20ejercicio1/src/persistence/LibroDAO.java</file>
+            <file>file:/D:/Programacion/Globant/NetBeansProjects/ejerciciosJDBCyJPA/JPA%20-%20ejercicio1/src/libreria/servicios/EditorialService.java</file>
+            <file>file:/D:/Programacion/Globant/NetBeansProjects/ejerciciosJDBCyJPA/JPA%20-%20ejercicio1/src/libreria/entidades/Autor.java</file>
+            <file>file:/D:/Programacion/Globant/NetBeansProjects/ejerciciosJDBCyJPA/JPA%20-%20ejercicio1/src/libreria/servicios/AutorService.java</file>
+            <file>file:/D:/Programacion/Globant/NetBeansProjects/ejerciciosJDBCyJPA/JPA%20-%20ejercicio1/src/persistence/EditorialDAO.java</file>
+            <file>file:/D:/Programacion/Globant/NetBeansProjects/ejerciciosJDBCyJPA/JPA%20-%20ejercicio1/src/persistence/DAO.java</file>
+        </group>
+    </open-files>
+</project-private>
